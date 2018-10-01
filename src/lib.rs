@@ -28,6 +28,8 @@ impl Component for Model {
         let callback = link.send_back(|url: String| Msg::UrlChanged(url));
         let mut route_service = RouteService::new();
         route_service.register_callback(callback);
+        let url = route_service.get_route();
+        info!("current url: {}", url);
         Model {
             route_service
         }
