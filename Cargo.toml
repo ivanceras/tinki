@@ -11,6 +11,7 @@ web_logger = "0.1"
 log = "0.4"
 yew = {path = "../yew"}
 failure = "0.1"
+url = "1.7.1"
 
 
 [replace]

@@ -14,6 +14,13 @@ use yew::services::Task;
 use yew::format::Nothing;
 
 use yew::virtual_dom::VNode;
+use stdweb::web::document;
+use stdweb::web::IParentNode;
+use stdweb::web::event::IEvent;
+use stdweb::web::IEventTarget;
+use stdweb::web::IElement;
+use stdweb::web::Element;
+use url::Url;
 
 mod route_service;
 
@@ -23,14 +30,17 @@ pub struct Model{
     route_service: RouteService<String>,
     fetch_service: FetchService,
     fetch_callback: Callback<Result<String, Error>>,
+    dom_ready: Callback<()>,
     task: Option<FetchTask>,
     content: String,
+    base_dir: Option<String>,
 
 }
 
 pub enum Msg{
     UrlChanged(String),
     FileReady(Result<String,Error>),
+    DomMounted,
 }
 
 
@@ -43,7 +53,15 @@ impl Component for Model {
         let mut route_service = RouteService::new();
         route_service.register_callback(callback);
         let url = route_service.get_route();
-        info!("current url is: {}", url);
+        let trim1 = url.trim_left_matches("/#/");
+        let segments:Vec<&str> = trim1.split("/").collect();
+        debug!("segments: {:?}", segments);
+        let n_segments = segments.len();
+        let base_dir = segments.into_iter().take(n_segments - 1 )
+                .filter(|s|!s.is_empty())
+                .collect::<Vec<&str>>()
+                .join("/");
+        debug!("base_dir: {}", base_dir);
         let fetch_callback = link.send_back(|file: Result<String,Error>| Msg::FileReady(file));
         let fetch_service = FetchService::new();
         let mut model = Model {
@@ -52,6 +70,8 @@ impl Component for Model {
             fetch_service,
             task: None,
             content: "".to_string(),
+            dom_ready: link.send_back(|_|Msg::DomMounted),
+            base_dir: if base_dir.is_empty(){None}else{Some(base_dir)},
         };
         let task = model.fetch_file(&url);
         model.task = Some(task);
@@ -67,10 +87,25 @@ impl Component for Model {
             Msg::FileReady(file) => {
                 info!("got file: {:?}", file);
                 if let Ok(raw) = file{
-                    self.content = spongedown::parse(&raw).unwrap();
+                    if let Some(ref base_dir) = self.base_dir{
+                        self.content = spongedown::parse_with_base_dir(&raw, &base_dir).unwrap();
+                    }else{
+                        self.content = spongedown::parse(&raw).unwrap();
+                    }
+                    //debug!("content: {}", self.content);
                 }
+                self.dom_ready.emit(());
+            }
+            Msg::DomMounted => {
+                debug!("dom mounted here");
+                //self.intercept_links();
             }
         }
+        true
+    }
+
+    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+        info!("in change");
         true
     }
 }
@@ -84,23 +119,21 @@ impl Renderable<Model> for Model {
         };
         let node = Node::try_from(js_svg).expect("convert js_svg");
         let sponge = VNode::VRef(node);
-        html! {
+        let html = html! {
             <>
             { sponge }
             <a href="/#/md/SUMMARY.md",>{"/#/md/SUMMARY.md"}</a>
-            <a href="#/md/SUMMARY.md",>{"#/md/SUMMARY.md"}</a>
-            <a href="/md/SUMMARY.md",>{"/md/SUMMARY.md"}</a>
-            <a href="md/SUMMARY.md",>{"md/SUMMARY.md"}</a>
             </>
-        }
+        };
+        html
     }
 }
 
 impl Model{
 
-    pub fn fetch_file(&mut self, file: &str) -> FetchTask {
+    fn fetch_file(&mut self, file: &str) -> FetchTask {
         info!("fetching file");
-        let mut file = file.trim_left_matches("/#/");
+        let file = file.trim_left_matches("/#/");
         let url = format!("http://localhost:8080/file/{}", file);
         info!("requesting url here...-->: {}", url);
         let fetch_callback = self.fetch_callback.clone();
@@ -130,5 +163,32 @@ impl Model{
         info!("doing the fetch.. request.. ");
         let task = self.fetch_service.fetch(request, handler.into());
         task
+    }
+
+    fn intercept_links(&self) {
+        info!("intercepting anchor tags");
+        if let Ok(anchors) = document().query_selector_all("a"){
+            info!("go anchors: {}", anchors.len());
+            let len = anchors.len();
+            for i in 0..len{
+                if let Some(anchor) = anchors.item(i){
+                    let elm_anchor:Result<Element,_> = TryFrom::try_from(anchor);
+                    if let Ok(elm_anchor) = elm_anchor{
+                        if let Some(href) = elm_anchor.get_attribute("href"){
+                            info!("href: {:?}", href);
+                            let new_href = format!("/md/{}",href);
+                            info!("new_href: {:?}", new_href);
+                            elm_anchor.set_attribute("href", &new_href);
+                            info!("reading the set href: {:?}", elm_anchor.get_attribute("href"));
+                            elm_anchor.add_event_listener(move |event:ClickEvent| {
+                                info!("this element.is clicked");
+                                event.prevent_default();
+                                info!("find this file: {:?}", href);
+                            });
+                        }
+                    }
+                }
+            }
+        }
     }
 }

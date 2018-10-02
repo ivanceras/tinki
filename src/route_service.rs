@@ -83,6 +83,10 @@ impl <T> RouteService<T>
         Self::get_route_from_location(&self.location)
     }
 
+    pub fn get_location(&self) -> Location {
+        self.location.clone()
+    }
+
     /// Gets the path name of the current url.
     pub fn get_path(&self) -> String {
         self.location.pathname().unwrap()
