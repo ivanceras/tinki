@@ -52,16 +52,6 @@ impl Component for Model {
         let callback = link.send_back(|url: String| Msg::UrlChanged(url));
         let mut route_service = RouteService::new();
         route_service.register_callback(callback);
-        let url = route_service.get_route();
-        let trim1 = url.trim_left_matches("/#/");
-        let segments:Vec<&str> = trim1.split("/").collect();
-        debug!("segments: {:?}", segments);
-        let n_segments = segments.len();
-        let base_dir = segments.into_iter().take(n_segments - 1 )
-                .filter(|s|!s.is_empty())
-                .collect::<Vec<&str>>()
-                .join("/");
-        debug!("base_dir: {}", base_dir);
         let fetch_callback = link.send_back(|file: Result<String,Error>| Msg::FileReady(file));
         let fetch_service = FetchService::new();
         let mut model = Model {
@@ -71,10 +61,10 @@ impl Component for Model {
             task: None,
             content: "".to_string(),
             dom_ready: link.send_back(|_|Msg::DomMounted),
-            base_dir: if base_dir.is_empty(){None}else{Some(base_dir)},
+            base_dir: None,
         };
-        let task = model.fetch_file(&url);
-        model.task = Some(task);
+        model.set_base_dir();
+        model.fetch_current_file();
         model
     }
 
@@ -163,6 +153,27 @@ impl Model{
         info!("doing the fetch.. request.. ");
         let task = self.fetch_service.fetch(request, handler.into());
         task
+    }
+
+    fn fetch_current_file(&mut self) {
+        let url = self.route_service.get_route();
+        let task = self.fetch_file(&url);
+        self.task = Some(task);
+    }
+
+    fn set_base_dir(&mut self) {
+        let url = self.route_service.get_route();
+        let trim1 = url.trim_left_matches("/#/");
+        let segments:Vec<&str> = trim1.split("/").collect();
+        debug!("segments: {:?}", segments);
+        let n_segments = segments.len();
+        let base_dir = segments.into_iter().take(n_segments - 1 )
+                .filter(|s|!s.is_empty())
+                .collect::<Vec<&str>>()
+                .join("/");
+        debug!("base_dir: {}", base_dir);
+        let base_dir = if base_dir.is_empty(){None}else{Some(base_dir)};
+        self.base_dir = base_dir;
     }
 
     fn intercept_links(&self) {
