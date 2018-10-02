@@ -10,6 +10,13 @@ stdweb = "0.4"
 web_logger = "0.1"
 log = "0.4"
 yew = {path = "../yew"}
+failure = "0.1"
+
 
 [replace]
-"spongedown:0.3.1" = { path = "../spongedown" } 
+"spongedown:0.3.1" = { path = "../spongedown" }
+
+[profile.release]
+debug = false
+lto = true
+opt-level = 'z'
