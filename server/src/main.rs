@@ -29,6 +29,14 @@ fn file(path: &str) -> HttpResponse {
     }
 }
 
+fn absolute_file_req(req: &HttpRequest) -> HttpResponse {
+    let path : PathBuf = req.match_info().query("path").expect("static file path should be defined");
+    let path = path.to_str().unwrap();
+    println!("path: {}", path);
+    let absolute_path = format!("/{}",path);
+    file(&absolute_path)
+}
+
 fn file_req(req: &HttpRequest) -> HttpResponse {
     let path : PathBuf = req.match_info().query("path").expect("static file path should be defined");
     let path = path.to_str().unwrap();
@@ -63,6 +71,7 @@ fn main() {
                        Cors::for_app(app)
                        .send_wildcard()
             .resource("/file/{path:.*}", |r|r.f(file_req))
+            .resource("/absolute_file/{path:.*}", |r|r.f(absolute_file_req))
             .resource("/", |r|r.f(index))
             .resource("/{static_file}", |r|r.f(static_file_req))
             .register()

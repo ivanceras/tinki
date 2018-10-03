@@ -5,17 +5,22 @@ authors = ["lee"]
 edition = "2018"
 
 [dependencies]
-spongedown = "0.3.1"
 stdweb = "0.4"
 web_logger = "0.1"
 log = "0.4"
 yew = {path = "../yew"}
 failure = "0.1"
 url = "1.7.1"
+url_path = "0.1.2"
+
+[dependencies.spongedown]
+version = "0.3.2"
+features = ["with-csv"]
 
 
 [replace]
-"spongedown:0.3.1" = { path = "../spongedown" }
+"url_path:0.1.2" = { path = "../url_path" }
+"spongedown:0.3.2" = { path = "../spongedown", features = ["with-csv"]}
 
 [profile.release]
 debug = false

@@ -21,6 +21,8 @@ use stdweb::web::IEventTarget;
 use stdweb::web::IElement;
 use stdweb::web::Element;
 use url::Url;
+use std::path::PathBuf;
+use url_path::UrlPath;
 
 mod route_service;
 
@@ -30,17 +32,15 @@ pub struct Model{
     route_service: RouteService<String>,
     fetch_service: FetchService,
     fetch_callback: Callback<Result<String, Error>>,
-    dom_ready: Callback<()>,
     task: Option<FetchTask>,
     content: String,
-    base_dir: Option<String>,
+    current_file: Option<UrlPath>,
 
 }
 
 pub enum Msg{
     UrlChanged(String),
     FileReady(Result<String,Error>),
-    DomMounted,
 }
 
 
@@ -60,10 +60,9 @@ impl Component for Model {
             fetch_service,
             task: None,
             content: "".to_string(),
-            dom_ready: link.send_back(|_|Msg::DomMounted),
-            base_dir: None,
+            current_file: None,
         };
-        model.set_base_dir();
+        model.set_current_file();
         model.fetch_current_file();
         model
     }
@@ -71,24 +70,19 @@ impl Component for Model {
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg{
             Msg::UrlChanged(url) => {
-                info!("url changed: {}", url);
-                self.task = Some(self.fetch_file(&url));
+                self.set_current_file_with(&url);
+                self.fetch_current_file();
             }
             Msg::FileReady(file) => {
-                info!("got file: {:?}", file);
                 if let Ok(raw) = file{
-                    if let Some(ref base_dir) = self.base_dir{
-                        self.content = spongedown::parse_with_base_dir(&raw, &base_dir).unwrap();
+                    if let Ok(html) = self.md_to_html(&raw){
+                        self.content = html;
                     }else{
-                        self.content = spongedown::parse(&raw).unwrap();
+                        self.content = "Error parsing html".to_string();
                     }
-                    //debug!("content: {}", self.content);
+                }else{
+                    self.content = format!("Error reading file {:?}", file);
                 }
-                self.dom_ready.emit(());
-            }
-            Msg::DomMounted => {
-                debug!("dom mounted here");
-                //self.intercept_links();
             }
         }
         true
@@ -112,7 +106,21 @@ impl Renderable<Model> for Model {
         let html = html! {
             <>
             { sponge }
-            <a href="/#/md/SUMMARY.md",>{"/#/md/SUMMARY.md"}</a>
+            <a href="/#md/SUMMARY.md",>
+                {"/#md/SUMMARY.md"}
+            </a>
+
+            <a href="/#/home/lee/PersonalBooks/notes/src/LINUX_NOTES.md",>
+                {"LINUX NOTES"}
+            </a>
+
+            <a href="/#https://raw.githubusercontent.com/ivanceras/svgbob/master/TODO.md",>
+                {"TODO in github"}
+            </a>
+
+            <a href="/#https://raw.githubusercontent.com/ivanceras/ivanceras.github.io/master/diwata/src/curtain.md",>
+                {"Curtain in github"}
+            </a>
             </>
         };
         html
@@ -122,9 +130,21 @@ impl Renderable<Model> for Model {
 impl Model{
 
     fn fetch_file(&mut self, file: &str) -> FetchTask {
+        let (is_absolute, is_external) = match self.current_file{
+            Some(ref current_file) => (current_file.is_absolute(), current_file.is_external()),
+            None => (false, false),
+        };
+        let base_url = if is_absolute{
+            "http://localhost:8080/absolute_file"
+        }else{
+            "http://localhost:8080/file"
+        };
         info!("fetching file");
-        let file = file.trim_left_matches("/#/");
-        let url = format!("http://localhost:8080/file/{}", file);
+        let url = if is_external{
+            file.to_string()
+        }else{
+            format!("{}/{}", base_url, file)
+        };
         info!("requesting url here...-->: {}", url);
         let fetch_callback = self.fetch_callback.clone();
         info!("then building the handler here..");
@@ -155,51 +175,54 @@ impl Model{
         task
     }
 
+    /// fetch the file that is set in the current_dir and current_file
     fn fetch_current_file(&mut self) {
-        let url = self.route_service.get_route();
-        let task = self.fetch_file(&url);
-        self.task = Some(task);
-    }
-
-    fn set_base_dir(&mut self) {
-        let url = self.route_service.get_route();
-        let trim1 = url.trim_left_matches("/#/");
-        let segments:Vec<&str> = trim1.split("/").collect();
-        debug!("segments: {:?}", segments);
-        let n_segments = segments.len();
-        let base_dir = segments.into_iter().take(n_segments - 1 )
-                .filter(|s|!s.is_empty())
-                .collect::<Vec<&str>>()
-                .join("/");
-        debug!("base_dir: {}", base_dir);
-        let base_dir = if base_dir.is_empty(){None}else{Some(base_dir)};
-        self.base_dir = base_dir;
-    }
-
-    fn intercept_links(&self) {
-        info!("intercepting anchor tags");
-        if let Ok(anchors) = document().query_selector_all("a"){
-            info!("go anchors: {}", anchors.len());
-            let len = anchors.len();
-            for i in 0..len{
-                if let Some(anchor) = anchors.item(i){
-                    let elm_anchor:Result<Element,_> = TryFrom::try_from(anchor);
-                    if let Ok(elm_anchor) = elm_anchor{
-                        if let Some(href) = elm_anchor.get_attribute("href"){
-                            info!("href: {:?}", href);
-                            let new_href = format!("/md/{}",href);
-                            info!("new_href: {:?}", new_href);
-                            elm_anchor.set_attribute("href", &new_href);
-                            info!("reading the set href: {:?}", elm_anchor.get_attribute("href"));
-                            elm_anchor.add_event_listener(move |event:ClickEvent| {
-                                info!("this element.is clicked");
-                                event.prevent_default();
-                                info!("find this file: {:?}", href);
-                            });
-                        }
-                    }
-                }
-            }
+        if let Some(ref current_file) = self.current_file{
+            let normalized:String = current_file.normalize();
+            let task = self.fetch_file(&normalized);
+            self.task = Some(task);
+        }else{
+            error!("No current file set");
         }
     }
+
+    /// set the current file based on the current route
+    fn set_current_file(&mut self) {
+        let url = self.route_service.get_route();
+        self.set_current_file_with(&url);
+    }
+
+    /// set the base directory and current file based on the supplied url
+    fn set_current_file_with(&mut self, url: &str) {
+        let trim1 = url.trim_left_matches("/#");
+        info!("trim1: {}", trim1);
+        let url_path = UrlPath::new(&trim1);
+        self.current_file = Some(url_path);
+    }
+
+    fn get_current_dir(&self) -> Option<String> {
+        match self.current_file{
+            Some(ref current_file) => match current_file.parent(){
+                Some(ref parent) => Some(parent.to_string()),
+                None => None,
+            }
+            None => None
+        }
+    }
+
+    fn md_to_html(&self, raw: &str) -> Result<String, ()> {
+        let html = if let Some(base_dir) = self.get_current_dir(){
+            spongedown::parse_with_base_dir(&raw, &base_dir)
+        }else{
+            spongedown::parse(&raw)
+        };
+        if let Ok(html) = html{
+            Ok(html)
+        }else{
+            Err(())
+        }
+    }
+
 }
+
+
