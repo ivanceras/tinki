@@ -20,6 +20,7 @@ fn file(path: &str) -> HttpResponse {
     match file::get(path){
         Ok(data) => {
             HttpResponse::Ok()
+                .content_type(get_content_type(path))
                 .body(data)
         }
         Err(e) => {
@@ -27,6 +28,29 @@ fn file(path: &str) -> HttpResponse {
                 .finish()
         }
     }
+}
+
+fn get_content_type(path: &str)->String{
+    let file_path = std::path::Path::new(path);
+    let default = "application/octet-stream";
+    let content_type = if let Some(ext) = file_path.extension() {
+        if let Some(ext) = ext.to_str(){
+            match ext{
+                "html" => "text/html; charset=utf-8",
+                "css" => "text/css; charset=utf-8",
+                "js" => "application/javascript; charset=utf-8",
+                "md" => "text/plain; charset=utf-8",
+                "txt" => "text/plain; charset=utf-8",
+                "wasm" => "application/wasm",
+                _ => "application/octet-stream",
+            }
+        }else{
+            default
+        }
+    }else{
+        default
+    };
+    content_type.to_string()
 }
 
 fn absolute_file_req(req: &HttpRequest) -> HttpResponse {
@@ -53,6 +77,7 @@ fn static_file(path: &str) -> HttpResponse {
         let content = file.contents();
         println!("file: {}", path);
         HttpResponse::Ok()
+            .content_type(get_content_type(path))
             .body(content)
     }else{
         HttpResponse::NotFound()
