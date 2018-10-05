@@ -1,4 +1,5 @@
-use actix_web::{http,
+use actix_web::{
+    http::ContentEncoding,
     server,
     App,
     Path,
@@ -53,6 +54,7 @@ fn static_file(path: &str) -> HttpResponse {
         let content = file.contents();
         println!("file: {}", path);
         HttpResponse::Ok()
+            .content_encoding(ContentEncoding::Br)
             .body(content)
     }else{
         HttpResponse::NotFound()

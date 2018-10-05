@@ -20,12 +20,15 @@ use stdweb::web::event::IEvent;
 use stdweb::web::IEventTarget;
 use stdweb::web::IElement;
 use stdweb::web::Element;
+use stdweb::web::INode;
 use url::Url;
 use std::path::PathBuf;
 use url_path::UrlPath;
 
 mod route_service;
+mod inject;
 
+static MINIMAL_CSS: &'static str = include_str!("../static/minimal.css");
 
 
 pub struct Model{
@@ -62,6 +65,8 @@ impl Component for Model {
             content: "".to_string(),
             current_file: None,
         };
+        inject::inject_css(MINIMAL_CSS);
+        inject::set_body_class("markdown-body");
         model.set_current_file();
         model.fetch_current_file();
         model
@@ -105,22 +110,22 @@ impl Renderable<Model> for Model {
         let sponge = VNode::VRef(node);
         let html = html! {
             <>
-            { sponge }
-            <a href="/#md/SUMMARY.md",>
-                {"/#md/SUMMARY.md"}
-            </a>
+                { sponge }
+                <a href="/#md/SUMMARY.md",>
+                    {"/#md/SUMMARY.md"}
+                </a>
 
-            <a href="/#/home/lee/PersonalBooks/notes/src/LINUX_NOTES.md",>
-                {"LINUX NOTES"}
-            </a>
+                <a href="/#https://raw.githubusercontent.com/ivanceras/svgbob/master/TODO.md",>
+                    {"TODO in github"}
+                </a>
 
-            <a href="/#https://raw.githubusercontent.com/ivanceras/svgbob/master/TODO.md",>
-                {"TODO in github"}
-            </a>
+                <a href="/#https://raw.githubusercontent.com/ivanceras/ivanceras.github.io/master/diwata/src/curtain.md",>
+                    {"Curtain in github"}
+                </a>
 
-            <a href="/#https://raw.githubusercontent.com/ivanceras/ivanceras.github.io/master/diwata/src/curtain.md",>
-                {"Curtain in github"}
-            </a>
+                <a href="/#md/dillinger.md",>
+                    {"/#md/dillinger.md"}
+                </a>
             </>
         };
         html
@@ -223,6 +228,8 @@ impl Model{
         }
     }
 
+
 }
+
 
 
