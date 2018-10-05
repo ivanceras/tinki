@@ -163,6 +163,7 @@ impl Model{
     fn fetch_current_file(&mut self) {
         if let Some(ref current_file) = self.current_file{
             let normalized:String = current_file.normalize();
+            info!("fetching file: {}", normalized);
             let task = self.fetch_file(&normalized);
             self.task = Some(task);
         }else{
@@ -178,9 +179,11 @@ impl Model{
 
     /// set the base directory and current file based on the supplied url
     fn set_current_file_with(&mut self, url: &str) {
-        let trim1 = url.trim_left_matches("/#");
+        let trim1 = url.trim_left_matches("/index.html#");
         info!("trim1: {}", trim1);
-        let url_path = UrlPath::new(&trim1);
+        let trim2 = trim1.trim_left_matches("/#");
+        info!("trim2: {}", trim2);
+        let url_path = UrlPath::new(&trim2);
         self.current_file = Some(url_path);
     }
 
