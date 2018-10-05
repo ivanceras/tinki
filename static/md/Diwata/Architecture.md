@@ -49,3 +49,5 @@ and structure presentation. Aside from just being a interactice Rich client appl
 the client is also responsible for mapping the URL to their corresponding application
 state and modules activated. Sharing the URL to other users with the same login
 credentials will show the same exact content.
+
+[Back to Diwata](../Diwata.md)
