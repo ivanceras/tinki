@@ -2,6 +2,10 @@ use stdweb::web::INode;
 use stdweb::web::document;
 use log::*;
 use stdweb::web::IElement;
+use stdweb::web::Node;
+use stdweb::unstable::TryFrom;
+use yew::virtual_dom::VNode;
+use stdweb::*;
 
 pub fn inject_css(css: &str) {
     if let Some(head) = document().head(){
@@ -30,3 +34,4 @@ pub fn set_body_class(class: &str){
         }
     }
 }
+

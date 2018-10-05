@@ -101,32 +101,18 @@ impl Component for Model {
 
 impl Renderable<Model> for Model {
     fn view(&self) -> Html<Self> {
-        let js_svg = js! {
-            var div = document.createElement("div");
-            div.innerHTML = @{self.content.to_owned()};
-            return div;
-        };
-        let node = Node::try_from(js_svg).expect("convert js_svg");
+        let article = format!("<article>{}</article>", &self.content);
+        let node = Node::from_html(&article).expect("Error converting html to node");
         let sponge = VNode::VRef(node);
         let html = html! {
-            <>
+            <div>
+                <nav>
+                    <a href="/#md/Home.md",>
+                        {"Home"}
+                    </a>
+                </nav>
                 { sponge }
-                <a href="/#md/SUMMARY.md",>
-                    {"/#md/SUMMARY.md"}
-                </a>
-
-                <a href="/#https://raw.githubusercontent.com/ivanceras/svgbob/master/TODO.md",>
-                    {"TODO in github"}
-                </a>
-
-                <a href="/#https://raw.githubusercontent.com/ivanceras/ivanceras.github.io/master/diwata/src/curtain.md",>
-                    {"Curtain in github"}
-                </a>
-
-                <a href="/#md/dillinger.md",>
-                    {"/#md/dillinger.md"}
-                </a>
-            </>
+            </div>
         };
         html
     }
@@ -134,25 +120,22 @@ impl Renderable<Model> for Model {
 
 impl Model{
 
-    fn fetch_file(&mut self, file: &str) -> FetchTask {
+    fn reconstruct_file_url(&self, file: &str) -> String {
         let (is_absolute, is_external) = match self.current_file{
             Some(ref current_file) => (current_file.is_absolute(), current_file.is_external()),
             None => (false, false),
         };
-        let base_url = if is_absolute{
-            "http://localhost:8080/absolute_file"
-        }else{
-            "http://localhost:8080/file"
-        };
-        info!("fetching file");
         let url = if is_external{
             file.to_string()
         }else{
-            format!("{}/{}", base_url, file)
+            format!("/{}", file)
         };
-        info!("requesting url here...-->: {}", url);
+        url
+    }
+
+    fn fetch_file(&mut self, file: &str) -> FetchTask {
+        let url = self.reconstruct_file_url(file);
         let fetch_callback = self.fetch_callback.clone();
-        info!("then building the handler here..");
         let handler = move |response: Response<Result<String, Error>>| {
             info!("got file response");
             let (meta, data) = response.into_parts();
@@ -168,16 +151,12 @@ impl Model{
             }
         };
         info!("building the request... {}", url);
-        let request = match Request::get(url.as_str()).body(Nothing){
-            Ok(request) => request,
-            Err(e) =>  {
-                info!("unable to build request : {}", url);
-                panic!();
-            }
-        };
-        info!("doing the fetch.. request.. ");
-        let task = self.fetch_service.fetch(request, handler.into());
-        task
+        if let Ok(request) = Request::get(&url).body(Nothing){
+            self.fetch_service.fetch(request, handler.into())
+        }else{
+            error!("Unable to build request");
+            panic!("Unable to build request");
+        }
     }
 
     /// fetch the file that is set in the current_dir and current_file

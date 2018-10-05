@@ -1,2 +1,0 @@
-# Ownership
- Guarantees memory safety
