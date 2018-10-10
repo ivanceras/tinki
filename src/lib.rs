@@ -107,7 +107,7 @@ impl Renderable<Model> for Model {
         let html = html! {
             <div>
                 <nav>
-                    <a href="/#md/Home.md",>
+                    <a href="/#Home.md",>
                         {"Home"}
                     </a>
                 </nav>
@@ -183,7 +183,11 @@ impl Model{
         info!("trim1: {}", trim1);
         let trim2 = trim1.trim_left_matches("/#");
         info!("trim2: {}", trim2);
-        let url_path = UrlPath::new(&trim2);
+        let url_path = if trim2.is_empty() || trim2 == "/"{
+            UrlPath::new("Home.md") // default file to fetch when url is empty
+        }else{
+            UrlPath::new(&trim2)
+        };
         self.current_file = Some(url_path);
     }
 
@@ -198,11 +202,13 @@ impl Model{
     }
 
     fn md_to_html(&self, raw: &str) -> Result<String, ()> {
-        let html = if let Some(base_dir) = self.get_current_dir(){
-            spongedown::parse_with_base_dir(&raw, &base_dir)
+        let prefix = if let Some(base_dir) = self.get_current_dir(){
+            base_dir
         }else{
-            spongedown::parse(&raw)
+            "./".to_string()
         };
+        let html = spongedown::parse_with_base_dir(&raw, &prefix);
+
         if let Ok(html) = html{
             Ok(html)
         }else{

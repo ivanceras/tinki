@@ -26,3 +26,4 @@ features = ["with-csv"]
 debug = false
 lto = true
 opt-level = 'z'
+panic = "abort"
