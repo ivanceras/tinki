@@ -3,6 +3,7 @@
 Spongedown extends markdown with support for additional useful features.
  - svgbob diagrams
  - inline csv
+ - embedding content
 
 
 #### Svgbob diagram
@@ -27,7 +28,7 @@ This is an example of svgbob diagram
 | Flowcharts |--.                 / /                  \ /
 '------------'   \               / /                    |     ____
                   v _______     / /                     '--> /___/
-.--------.         /       \---' /                          
+.--------.         /       \---' /
 | Graphs |------->/ Sponge  \---'-.
 '--------'     .->\  down   /----. \           ^  .  /\  .-.
               / .->\_______/-.    \ \          |_/ \/  \/   \
@@ -45,14 +46,14 @@ This is an example of svgbob diagram
                                          \     +------------|   (,⊙–⊙,)७ |
                                           `--.              +------------+
                                               \
-                                               v           .-,(  ),-.    
-                                            ___  _      .-(          )-.                                       
-                                           [___]|=| -->(                )      __________ 
+                                               v           .-,(  ),-.
+                                            ___  _      .-(          )-.
+                                           [___]|=| -->(                )      __________
                                            /::/ |_|     '-(          ).-' --->[_...__...°]
-                                                           '-.( ).-'                         
-                                                                   \      ____   __ 
+                                                           '-.( ).-'
+                                                                   \      ____   __
                                                                     '--->|    | |==|
-                                                                         |____| |  | 
+                                                                         |____| |  |
                                                                          /::::/ |__|
 
 ```
@@ -77,6 +78,17 @@ apple,banana,carrots
 rust,haskel,c
 1,2,3
 ```
+
+#### Embedding content
+
+```csv capture as input1
+what,ever,goes,here
+will,be,captured,and
+can,be,referenced,later
+on,
+```
+
+![```csv][input1]
 
 #### Markdown works as is.
 

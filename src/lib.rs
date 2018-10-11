@@ -107,7 +107,7 @@ impl Renderable<Model> for Model {
         let html = html! {
             <div>
                 <nav>
-                    <a href="/#Home.md",>
+                    <a href="/",>
                         {"Home"}
                     </a>
                 </nav>
@@ -151,12 +151,8 @@ impl Model{
             }
         };
         info!("building the request... {}", url);
-        if let Ok(request) = Request::get(&url).body(Nothing){
-            self.fetch_service.fetch(request, handler.into())
-        }else{
-            error!("Unable to build request");
-            panic!("Unable to build request");
-        }
+        let request = Request::get(&url).body(Nothing).expect("Unable to build request");
+        self.fetch_service.fetch(request, handler.into())
     }
 
     /// fetch the file that is set in the current_dir and current_file
@@ -180,13 +176,13 @@ impl Model{
     /// set the base directory and current file based on the supplied url
     fn set_current_file_with(&mut self, url: &str) {
         let trim1 = url.trim_left_matches("/index.html#");
-        info!("trim1: {}", trim1);
-        let trim2 = trim1.trim_left_matches("/#");
-        info!("trim2: {}", trim2);
-        let url_path = if trim2.is_empty() || trim2 == "/"{
-            UrlPath::new("Home.md") // default file to fetch when url is empty
+        let trim2 = trim1.trim_left_matches("/index.html");
+        let trim3 = trim2.trim_left_matches("/#");
+        let final_trim = trim3;
+        let url_path = if final_trim.is_empty() || final_trim == "/"{
+            UrlPath::new("index.md") // default file to fetch when url is empty
         }else{
-            UrlPath::new(&trim2)
+            UrlPath::new(&final_trim)
         };
         self.current_file = Some(url_path);
     }
