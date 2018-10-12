@@ -12,6 +12,7 @@ yew = {path = "../yew"}
 failure = "0.1"
 url = "1.7.1"
 url_path = "0.1.2"
+web_util = {path = "../web_util"}
 
 [dependencies.spongedown]
 version = "0.3.2"

@@ -1,4 +1,4 @@
-## Home
+# Home
 
 - [Spongedown](md/Spongedown.md)
 - [Svgbob](md/Svgbob.md)

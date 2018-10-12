@@ -1,5 +1,6 @@
+# Diwata Architecture
 
-## Diwata is comprised with 3 major components
+#### Diwata is comprised with 3 major components
 
 1. Rustorm
 2. Intel
@@ -10,22 +11,22 @@
              .----------.            .- - - - - - - - - -.
             (  Rustorm   )  <|- - - -! Database metadata !
              `----------'            `- - - - - - - - - -'
-                   |    
-                   |  
-                   |   
-                   |  
+                   |
+                   |
+                   |
+                   |
                    v
                _________
               /         \            . - - - - - - - - - - .
              /   Intel   \  <|- - - -! Data interpretation !
              \           /           `- - - - - - - - - - -'
               \_________/
-                   |          
                    |
-                   | 
-                   | 
+                   |
+                   |
+                   |
                    v
-        +--------------------+    
+        +--------------------+
        /                      \
       /        Client          \
      /                          \
@@ -33,17 +34,17 @@
 
 ```
 
-#### Rustorm 
+#### Rustorm
 Rustorm is the database ORM that takes care of extract table meta data
 from the underlying database.
 
-#### Intel 
+#### Intel
 Intel is the intellisense of the system which does inference of an interpreting
 the data being instrospected. This contains the logic for determining the presentation
 of the data to the client. It fills the gap when there is not enough information
 extracted from the system.
 
-#### Client 
+#### Client
 The client does pull the curtain API and display the content in a nice
 and structure presentation. Aside from just being a interactice Rich client application,
 the client is also responsible for mapping the URL to their corresponding application

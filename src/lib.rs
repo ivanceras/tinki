@@ -26,7 +26,6 @@ use std::path::PathBuf;
 use url_path::UrlPath;
 
 mod route_service;
-mod inject;
 
 static MINIMAL_CSS: &'static str = include_str!("../static/minimal.css");
 
@@ -37,6 +36,7 @@ pub struct Model{
     fetch_callback: Callback<Result<String, Error>>,
     task: Option<FetchTask>,
     content: String,
+    title: Option<String>,
     current_file: Option<UrlPath>,
 
 }
@@ -63,10 +63,11 @@ impl Component for Model {
             fetch_service,
             task: None,
             content: "".to_string(),
+            title: None,
             current_file: None,
         };
-        inject::inject_css(MINIMAL_CSS);
-        inject::set_body_class("markdown-body");
+        web_util::inject_css(MINIMAL_CSS);
+        web_util::set_body_class("markdown-body");
         model.set_current_file();
         model.fetch_current_file();
         model
@@ -80,8 +81,10 @@ impl Component for Model {
             }
             Msg::FileReady(file) => {
                 if let Ok(raw) = file{
-                    if let Ok(html) = self.md_to_html(&raw){
-                        self.content = html;
+                    if let Ok((content, title)) = self.md_to_html(&raw){
+                        self.content = content;
+                        self.title = title;
+                        self.set_title();
                     }else{
                         self.content = "Error parsing html".to_string();
                     }
@@ -197,7 +200,7 @@ impl Model{
         }
     }
 
-    fn md_to_html(&self, raw: &str) -> Result<String, ()> {
+    fn md_to_html(&self, raw: &str) -> Result<(String, Option<String>), ()> {
         let prefix = if let Some(base_dir) = self.get_current_dir(){
             base_dir
         }else{
@@ -206,9 +209,15 @@ impl Model{
         let html = spongedown::parse_with_base_dir(&raw, &prefix);
 
         if let Ok(html) = html{
-            Ok(html)
+            Ok((html.content, html.title))
         }else{
             Err(())
+        }
+    }
+
+    fn set_title(&self) {
+        if let Some(ref title) = self.title{
+            web_util::set_title(title);
         }
     }
 
