@@ -267,6 +267,15 @@ div.side-to-side{
     justify-content: space-evenly;
 }
 
-div.side-to-side > :first-child pre{
-    margin-top: -20px;
+div.side-to-side > div:first-child pre,
+div.side-to-side > div:first-child code {
+    overflow-x: hidden;
+    background-color: transparent;
+    font-size: 14px;
+    font-family: monospace;
+}
+
+
+div.side-to-side > div:nth-child(2) {
+    padding-top: 30px;
 }
