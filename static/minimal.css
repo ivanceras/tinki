@@ -262,3 +262,11 @@ li+li {
 }
 
 
+div.side-to-side{
+    display:flex;
+    justify-content: space-evenly;
+}
+
+div.side-to-side > :first-child pre{
+    margin-top: -20px;
+}
