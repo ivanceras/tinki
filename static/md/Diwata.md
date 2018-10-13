@@ -12,3 +12,5 @@ Diwata is a user-friendly and content-aware database interface.
 - Well integrated with the browsers, clickable tables, records and tabs can be openned in a new window and displays the data as though clicking on it.
 
 [Diwata architecture](Diwata/Architecture.md)
+
+[Code Repository](https://github.com/ivanceras/diwata)

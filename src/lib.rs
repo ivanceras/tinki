@@ -123,52 +123,42 @@ impl Renderable<Model> for Model {
 
 impl Model{
 
-    fn reconstruct_file_url(&self, file: &str) -> String {
-        let (is_absolute, is_external) = match self.current_file{
-            Some(ref current_file) => (current_file.is_absolute(), current_file.is_external()),
-            None => (false, false),
-        };
-        let url = if is_external{
-            file.to_string()
-        }else{
-            format!("/{}", file)
-        };
-        url
-    }
 
-    fn fetch_file(&mut self, file: &str) -> FetchTask {
-        let url = self.reconstruct_file_url(file);
-        let fetch_callback = self.fetch_callback.clone();
-        let handler = move |response: Response<Result<String, Error>>| {
-            info!("got file response");
-            let (meta, data) = response.into_parts();
-            if meta.status.is_success() {
-                fetch_callback.emit(data)
-            } else {
-                info!("fail!");
-                // format_err! is a macro in crate `failure`
-                fetch_callback.emit(Err(format_err!(
-                    "{}: error getting file ",
-                    meta.status
-                )))
-            }
-        };
-        info!("building the request... {}", url);
-        let request = Request::get(&url).body(Nothing).expect("Unable to build request");
-        self.fetch_service.fetch(request, handler.into())
-    }
-
-    /// fetch the file that is set in the current_dir and current_file
+    /// TODO: If links to external non markdown file, redirect to it.
     fn fetch_current_file(&mut self) {
         if let Some(ref current_file) = self.current_file{
-            let normalized:String = current_file.normalize();
-            info!("fetching file: {}", normalized);
-            let task = self.fetch_file(&normalized);
-            self.task = Some(task);
-        }else{
-            error!("No current file set");
+            let fetch_url = if current_file.is_external(){
+                current_file.normalize()
+            }else{
+                format!("/{}", current_file.normalize())
+            };
+            if current_file.is_external() 
+                && current_file.extension() != Some("md".to_string()){
+                info!("not an md file.. redirect to it");
+                web_util::redirect(&fetch_url);
+            }else{
+                let fetch_callback = self.fetch_callback.clone();
+                let handler = move |response: Response<Result<String, Error>>| {
+                    info!("got file response");
+                    let (meta, data) = response.into_parts();
+                    if meta.status.is_success() {
+                        fetch_callback.emit(data)
+                    } else {
+                        info!("fail!");
+                        // format_err! is a macro in crate `failure`
+                        fetch_callback.emit(Err(format_err!(
+                            "{}: error getting file ",
+                            meta.status
+                        )))
+                    }
+                };
+                info!("building the request... {}", fetch_url);
+                let request = Request::get(&fetch_url).body(Nothing).expect("Unable to build request");
+                self.task = Some(self.fetch_service.fetch(request, handler.into()));
+            }
         }
     }
+
 
     /// set the current file based on the current route
     fn set_current_file(&mut self) {
