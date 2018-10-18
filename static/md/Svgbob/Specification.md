@@ -569,4 +569,28 @@ Greather than sign makes an arrow to the right if a line connects to it from lef
 </div>
 </div>
 
+#### Double quotes
+
+Double quotes is used as an escape to prevent svgbob from interpreting the characters as drawing character and use them as text instead.
+
+<div class="side-to-side">
+<div>
+
+```none
+".----------------."
+"| Don't draw me  |"
+"`----------------'"
+```
+</div>
+<div>
+
+```bob
+".----------------."
+"| Don't draw me  |"
+"`----------------'"
+```
+
+</div>
+</div>
+
 [Back to Svgbob](../Svgbob.md)

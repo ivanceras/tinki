@@ -73,7 +73,7 @@ What can it do?
      __|____|__       _/ .-. \
     |  ______--|     (_)(   ) )
     `-/.::::.\-'       \ `-'_/
-     `--------'         `--(_) 
+     `--------'         `--(_)
 
 ```
 #### Box drawing
@@ -84,9 +84,9 @@ What can it do?
             ┌─┬┐  ╔═╦╗  ╓─╥╖  ╒═╤╕
             ├─┼┤  ╠═╬╣  ╟─╫╢  ╞═╪╡
             └─┴┘  ╚═╩╝  ╙─╨╜  ╘═╧╛
-            ╭─┬╮	
-            ├─┼┤  
-            ╰─┴╯  
+            ╭─┬╮
+            ├─┼┤
+            ╰─┴╯
 ```
 
 
@@ -150,23 +150,23 @@ What can it do?
                      B --> C -'
 
 
-                          ,-.  
-                          `-'  
-                          /|\  
-         ,---.             |   
-         |Bob|            / \  
-         `-+-'           Alice 
-           |    hello      |   
-           |-------------->|   
-           |               |   
-           |  Is it ok?    |   
-           |<- - - - - - - |   
-         ,-+-.           Alice 
-         |Bob|            ,-.  
-         `---'            `-'  
-                          /|\  
-                           |   
-                          / \  
+                          ,-.
+                          `-'
+                          /|\
+         ,---.             |
+         |Bob|            / \
+         `-+-'           Alice
+           |    hello      |
+           |-------------->|
+           |               |
+           |  Is it ok?    |
+           |<- - - - - - - |
+         ,-+-.           Alice
+         |Bob|            ,-.
+         `---'            `-'
+                          /|\
+                           |
+                          / \
 
 
               .─.
@@ -177,10 +177,10 @@ What can it do?
           V         V
          .─.         .─.
         ( 1 )       ( 4 )
-         `-'         `-' . 
+         `-'         `-' .
        /   \         |  \ `.
       /     \        |   \  `.
-     V       V       |    \   `. 
+     V       V       |    \   `.
     .─.      .─.     V     V    V
    ( 2 )    ( 3 )    .─.   .─.   .─.
     `─'      `─'    ( 5 ) ( 6 ) ( 7 )
@@ -337,7 +337,7 @@ What can it do?
                   |
                   |          micro henry
                   |          coil w/tuning lug
-                  |    .----.    
+                  |    .----.
                   |   (.-') |
                   |   (.-') |
                   |   (.-') |      pico farad cap
@@ -345,7 +345,7 @@ What can it do?
                   |   |     |   |___|
         PC   ->  .----'-----'---'---'
         Board    `-------------------
-                 ground plane (foil) 
+                 ground plane (foil)
 
 ```
 
@@ -428,7 +428,7 @@ What can it do?
                                                      |
                                                     GND
 
-```  
+```
 
 ### Advantages
 
@@ -436,8 +436,8 @@ What can it do?
     - Ultimately portable, backward compatible and future proof.
  - Degrades gracefully
     - Even when not using a graphical renderer, it would still looks good
-    as text based diagrams. 
- - Easiest to use. 
+    as text based diagrams.
+ - Easiest to use.
     - Anyone knows how to edit text.
 
 ### Goal
@@ -450,5 +450,6 @@ What can it do?
 
 #### Links
 - [Svgbob specification](Svgbob/Specification.md)
+- [Design implementation](Svgbob/Design-Implementation.md)
 - [Code Respository](https://github.com/ivanceras/svgbob)
 - [Svgbob live editor](https://ivanceras.github.io/svgbob-editor)
