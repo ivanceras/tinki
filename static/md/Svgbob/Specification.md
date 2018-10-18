@@ -26,6 +26,8 @@ _, underscore
 v, letter v
 V, capital letter V
 ^, caret
+/, Forward slash
+\, Backward slash
 """",Double quote
 
 
@@ -569,6 +571,48 @@ Greather than sign makes an arrow to the right if a line connects to it from lef
 </div>
 </div>
 
+#### Forward slash
+
+Forward slash makes a 60 degree angled lines
+
+<div class="side-to-side">
+<div>
+
+```none
+     /
+    /
+```
+</div>
+<div>
+
+```bob
+     /
+    /
+```
+</div>
+</div>
+
+#### Backslash
+
+Backslash makes a 120 desgree angled lines
+
+<div class="side-to-side">
+<div>
+
+```none
+   \
+    \
+```
+</div>
+<div>
+
+```bob
+   \
+    \
+```
+</div>
+</div>
+
 #### Double quotes
 
 Double quotes is used as an escape to prevent svgbob from interpreting the characters as drawing character and use them as text instead.
@@ -580,6 +624,10 @@ Double quotes is used as an escape to prevent svgbob from interpreting the chara
 ".----------------."
 "| Don't draw me  |"
 "`----------------'"
+
+ .--------------.
+ | Ok, draw me  |
+ `--------------'
 ```
 </div>
 <div>
@@ -588,9 +636,101 @@ Double quotes is used as an escape to prevent svgbob from interpreting the chara
 ".----------------."
 "| Don't draw me  |"
 "`----------------'"
+
+ .--------------.
+ | Ok, draw me  |
+ `--------------'
 ```
 
 </div>
 </div>
+
+## Combination of characters
+
+#### Period and slash
+
+<div class="side-to-side">
+<div>
+
+```none
+  .--   --.   \        /
+   \     /     `--  --'
+```
+</div>
+<div>
+
+```bob
+  .--   --.  \        /
+   \     /    `--  --'
+```
+</div>
+</div>
+
+#### Plus and slash
+
+<div class="side-to-side">
+<div>
+
+```none
+  +--   --+   \        /
+   \     /     +--  --+
+```
+</div>
+<div>
+
+```bob
+  +--   --+  \        /
+   \     /    +--  --+
+```
+</div>
+</div>
+
+#### Underscore and vertical lines
+
+
+<div class="side-to-side">
+<div>
+
+```none
+    |   __
+    |__   |
+          |
+
+```
+</div>
+<div>
+
+```bob
+    |   __
+    |__   |
+          |
+
+```
+</div>
+</div>
+
+#### Parenthesis, period and quote
+
+
+<div class="side-to-side">
+<div>
+
+```none
+   .    .
+  (      )
+   `    '
+```
+</div>
+<div>
+
+```bob
+   .    .
+  (      )
+   `    '
+```
+</div>
+</div>
+
+[Circle specification](Circles.md)
 
 [Back to Svgbob](../Svgbob.md)

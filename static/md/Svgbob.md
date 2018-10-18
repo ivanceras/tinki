@@ -450,6 +450,7 @@ What can it do?
 
 #### Links
 - [Svgbob specification](Svgbob/Specification.md)
+- [Circle specification](Svgbob/Circles.md)
 - [Design implementation](Svgbob/Design-Implementation.md)
 - [Code Respository](https://github.com/ivanceras/svgbob)
-- [Svgbob live editor](https://ivanceras.github.io/svgbob-editor)
+- [Svgbob live editor](https://ivanceras.github.io/svgbob-editor) - an online editor which lets you easily create svgbob drawing

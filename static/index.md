@@ -20,6 +20,7 @@
 #### Little projects
 - [url_path](https://github.com/ivanceras/url_path) - Manipulates url canonicalization without requiring contraint to the file system
 - [r2d2-sqlite](https://github.com/ivanceras/r2d2-sqlite) - An r2d2 connection pooling for sqlite
+- [blob-uuid](https://github.com/ivanceras/blob-uuid) - convert uuid into a url friendly 22 character string blob, useful for making url slugs
 
 #### Inactive projects
 - [Balisong](https://github.com/ivanceras/balisong) - An attempt to create voxel base raytracing in rust.
