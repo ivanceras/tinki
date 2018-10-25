@@ -87,6 +87,8 @@ impl Component for Model {
                     map.insert("./records.csv".to_string(), "hello,world".to_string().into_bytes());
 
                     let embed_files = Some(map);
+                    let files = self.get_embeded_files(&raw);
+                    info!("embedded files: {:#?}", files);
                     if let Ok((content, title)) = self.md_to_html(&raw, &embed_files){
                         self.content = content;
                         self.title = title;
@@ -205,6 +207,14 @@ impl Model{
 
         if let Ok(html) = html{
             Ok((html.content, html.title))
+        }else{
+            Err(())
+        }
+    }
+
+    fn get_embeded_files(&self, raw: &str) -> Result<Vec<String>, ()> {
+        if let Ok(embedded_files) = spongedown::pre_parse_get_embedded_files(raw){
+            Ok(embedded_files)
         }else{
             Err(())
         }
