@@ -24,6 +24,7 @@ use stdweb::web::INode;
 use url::Url;
 use std::path::PathBuf;
 use url_path::UrlPath;
+use std::collections::BTreeMap;
 
 mod route_service;
 
@@ -81,7 +82,12 @@ impl Component for Model {
             }
             Msg::FileReady(file) => {
                 if let Ok(raw) = file{
-                    if let Ok((content, title)) = self.md_to_html(&raw){
+                    let mut map = BTreeMap::new();
+                    map.insert("records.csv".to_string(), "hello,world".to_string().into_bytes());
+                    map.insert("./records.csv".to_string(), "hello,world".to_string().into_bytes());
+
+                    let embed_files = Some(map);
+                    if let Ok((content, title)) = self.md_to_html(&raw, &embed_files){
                         self.content = content;
                         self.title = title;
                         self.set_title();
@@ -124,7 +130,6 @@ impl Renderable<Model> for Model {
 impl Model{
 
 
-    /// TODO: If links to external non markdown file, redirect to it.
     fn fetch_current_file(&mut self) {
         if let Some(ref current_file) = self.current_file{
             let fetch_url = if current_file.is_external(){
@@ -132,7 +137,7 @@ impl Model{
             }else{
                 format!("/{}", current_file.normalize())
             };
-            if current_file.is_external() 
+            if current_file.is_external()
                 && current_file.extension() != Some("md".to_string()){
                 info!("not an md file.. redirect to it");
                 web_util::redirect(&fetch_url);
@@ -190,13 +195,13 @@ impl Model{
         }
     }
 
-    fn md_to_html(&self, raw: &str) -> Result<(String, Option<String>), ()> {
+    fn md_to_html(&self, raw: &str, embed_files: &Option<BTreeMap<String, Vec<u8>>>) -> Result<(String, Option<String>), ()> {
         let prefix = if let Some(base_dir) = self.get_current_dir(){
             base_dir
         }else{
             "./".to_string()
         };
-        let html = spongedown::parse_with_base_dir(&raw, &prefix);
+        let html = spongedown::parse_with_base_dir(&raw, &prefix, embed_files);
 
         if let Ok(html) = html{
             Ok((html.content, html.title))

@@ -88,6 +88,9 @@ can,be,referenced,later
 on,
 ```
 
+![](records.csv)
+![](image.jpg)
+
 ![```csv][input1]
 
 #### Markdown works as is.

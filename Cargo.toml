@@ -16,12 +16,12 @@ web_util = {path = "../web_util"}
 
 [dependencies.spongedown]
 version = "0.3.2"
-features = ["with-csv"]
+features = ["with-csv", "with-embed"]
 
 
 [replace]
 "url_path:0.1.2" = { path = "../url_path" }
-"spongedown:0.3.2" = { path = "../spongedown", features = ["with-csv"]}
+"spongedown:0.3.2" = { path = "../spongedown"}
 
 [profile.release]
 debug = false
