@@ -194,7 +194,7 @@ and from the right.
 </div>
 
 
- - Plus sign makes a cross-section when connected from 4 directions (top, right, bottom, left)
+ - Plus sign makes an intersection  when connected from 4 directions (top, right, bottom, left)
 <div class="side-to-side">
 <div>
 
