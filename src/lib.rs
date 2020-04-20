@@ -7,7 +7,7 @@ use wasm_bindgen::prelude::*;
 #[derive(Clone)]
 pub enum Msg {
     UrlChanged(String),
-    FileReady(Result<String,JsValue>),
+    FileReady(Result<String, JsValue>),
 }
 
 pub struct App {
@@ -20,9 +20,9 @@ pub struct App {
 impl App {
     fn new() -> Self {
         let hash = Browser::get_hash();
-        let current_file = if !hash.trim().is_empty(){
+        let current_file = if !hash.trim().is_empty() {
             UrlPath::new(Self::clean_link(&hash))
-        }else{
+        } else {
             UrlPath::new("index.md")
         };
         App {
@@ -34,29 +34,31 @@ impl App {
     }
 
     fn clean_link(url: &str) -> &str {
-                let url = url.trim_left_matches("#/");
-                let url = url.trim_left_matches("#");
-                url
+        let url = url.trim_left_matches("#/");
+        let url = url.trim_left_matches("#");
+        url
     }
 
-    fn fetch_current_file(&self) -> Cmd<App,Msg> {
+    fn fetch_current_file(&self) -> Cmd<App, Msg> {
         let url = self.current_file.normalize();
         trace!("fetching {}", url);
-        Http::fetch_with_text_response_decoder(
-            &url,
-            |v|{v},
-            Msg::FileReady,
-        )
+        Http::fetch_with_text_response_decoder(&url, |v| v, Msg::FileReady)
     }
 
     fn markdown_to_html(&mut self) {
         let embed_files = BTreeMap::new();
-        if let Ok(html) = spongedown::parse_with_base_dir(&self.raw, &self.current_file.parent().unwrap_or("/".to_string()),  &Some(embed_files)){
+        if let Ok(html) = spongedown::parse_with_base_dir(
+            &self.raw,
+            &self.current_file.parent().unwrap_or("/".to_string()),
+            &Some(embed_files),
+        ) {
             self.title = html.title;
             self.content = html.content;
+            if let Some(title) = &self.title{
+                Window::set_title(&title);
+            }
         }
     }
-
 }
 
 impl Component<Msg> for App {
@@ -76,7 +78,7 @@ impl Component<Msg> for App {
             }
             Msg::FileReady(file) => {
                 Browser::scroll_to_top();
-                match file{
+                match file {
                     Ok(raw) => {
                         trace!("ok got file");
                         self.raw = raw;

@@ -2,8 +2,11 @@
 set -v
 wasm-pack build --target no-modules --release
 
-cp -r ./pkg ../ivanceras.github.io/
-cp index.html ../ivanceras.github.io/
-cp index.md ../ivanceras.github.io/
-cp minimal.css ../ivanceras.github.io/
+dest_dir="../ivanceras.github.io/"
+
+cp -r ./pkg "${dest_dir}"
+cp index.html "${dest_dir}"
+cp index.md "${dest_dir}"
+cp minimal.css "${dest_dir}"
+rm "${dest_dir}pkg/.gitignore"
 
