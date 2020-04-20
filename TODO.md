@@ -4,3 +4,4 @@
 - [ ] Determine if the external link is to be redirected or loaded here
    - [ ] Load if it ends with me
    - [ ] redirect otherwise
+- optimize spongedown to use pulldown-cmark and sauron for faster performance

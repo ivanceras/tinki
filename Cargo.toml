@@ -4,28 +4,15 @@ version = "0.1.0"
 authors = ["lee"]
 edition = "2018"
 
+[lib]
+crate-type = ["cdylib"]
+
 [dependencies]
-stdweb = "0.4"
-web_logger = "0.1"
+sauron = { path = "../sauron", features = ["with-dom"] }
+url_path = { path = "../url_path" }
 log = "0.4"
-yew = {path = "../yew"}
-failure = "0.1"
-url = "1.7.1"
-url_path = "0.1.2"
-web_util = {path = "../web_util"}
+console_log = "0.1"
+spongedown = { path = "../spongedown" }
+wasm-bindgen = "0.2.60"
+console_error_panic_hook = "0.1"
 
-[dependencies.spongedown]
-#version = "0.3.2"
-path = "../spongedown"
-features = ["with-csv", "with-embed"]
-
-
-[replace]
-"url_path:0.1.2" = { path = "../url_path" }
-#"spongedown:0.3.2" = { path = "../spongedown"}
-
-[profile.release]
-debug = false
-lto = true
-opt-level = 'z'
-panic = "abort"

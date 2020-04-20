@@ -1,4 +1,9 @@
 
 set -v
-cargo web deploy --release
-cp -r ./target/deploy/* ../ivanceras.github.io/
+wasm-pack build --target no-modules --release
+
+cp -r ./pkg ../ivanceras.github.io/
+cp index.html ../ivanceras.github.io/
+cp index.md ../ivanceras.github.io/
+cp minimal.css ../ivanceras.github.io/
+
