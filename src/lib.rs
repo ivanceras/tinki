@@ -20,11 +20,7 @@ pub struct App {
 impl App {
     fn new() -> Self {
         let hash = Browser::get_hash();
-        let current_file = if !hash.trim().is_empty() {
-            UrlPath::new(Self::clean_link(&hash))
-        } else {
-            UrlPath::new("index.md")
-        };
+        let current_file = UrlPath::new(Self::clean_link(&hash));
         App {
             raw: String::new(),
             content: String::new(),
@@ -34,9 +30,13 @@ impl App {
     }
 
     fn clean_link(url: &str) -> &str {
-        let url = url.trim_left_matches("#/");
-        let url = url.trim_left_matches("#");
-        url
+        let url = url.trim_start_matches("#/");
+        let url = url.trim_start_matches("#");
+		if url.trim().is_empty(){
+			"index.md"
+		}else{
+			url
+		}
     }
 
     fn fetch_current_file(&self) -> Cmd<App, Msg> {

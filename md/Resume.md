@@ -15,22 +15,30 @@ Opensource programmer with passion for innovative technologies
 * Code quality and code correctness
 * Research and development
 
-
 ## Preferred Technology Stack
 * Linux, Rust, PostgreSQL, Webassembly
 
 
 ## All Technology Stack
-* Linux, Rust, PostgreSQL, Java, Php, Bash/Shell, Docker
-* Javascript, HTML/CSS, Elm, Webassembly, React, React-native
-* PostgreSQL,Mysql,Oracle,SQLite, Hadoop/Hive/MapReduce
+* Linux, **Rust**, PostgreSQL, Java, Php, Bash/Shell, Docker
+* Javascript, HTML/CSS, **Elm**, **Webassembly**, React, React-native
+* **PostgreSQL**,Mysql,Oracle,SQLite, Hadoop/Hive/MapReduce
 * git, vim, Eclipse, IntelliJ
 * xls+ods+csv data processing
 
 
 ## Professional Work Experience
 
-* **Freelancing and opensource (May 2019 - Present)**
+* **Centrifuge Inc (March 2020 - Present)**
+    - Centrifuge-chain protocol engineer
+    - Responsibilities:
+        - Build and integrate substrate pallet/modules into centrifuge-chain
+        - Build and integrate monitoring tools for blockchain validators and nodes
+    - Technologies used:
+        - **rust**, blockchain, cryptography, **paritytech/substrate**, polkadot network, prometheus + grafana, bash scripting
+
+
+* **Freelancing and opensource (May 2019 - Dec 2019)**
     - Self study rust and freelance contracts.
     - Projects:
         - **dns gateway module** - an independent contract project which manages and automate acquisition of ssl certificates from lets-encrypt.
@@ -39,7 +47,7 @@ Opensource programmer with passion for innovative technologies
         - **open-api parser** - generates rust source code from open-api spec.
 
     - Technolgoies used:
-        - rust, tokio, actix-web, rustls
+        - **rust**, tokio, actix-web, rustls
 
 * **Senior Software Engineer at Copyleft Solutions (Jun 2017 - Dec 2018)**
 
@@ -72,7 +80,7 @@ Opensource programmer with passion for innovative technologies
         - Implemented a project involving document search using amazon ElasticSearch.
 
     - Skills used
-        - Java, GWT, Amazon EMR, Amazon SDK(lambda, s3, elasticsearch)
+        - **Java**, GWT, Amazon EMR, Amazon SDK(lambda, s3, elasticsearch)
         - Javascript, Angularjs, jquery, bootstrap
         - PostgreSQL, SymmetricDS, SQLite
         - Rust, python, C, bash
