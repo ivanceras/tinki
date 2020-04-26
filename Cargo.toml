@@ -5,6 +5,7 @@ authors = [ "Jovansonlee Cesar <ivanceras@gmail.com>" ]
 license = "MIT"
 edition = "2018"
 repository = "https://github.com/ivanceras/tinki"
+description = "Markdown based personal wiki"
 documentation = "https://docs.rs/tinki"
 keywords = ["markdown", "wiki", "svgbob"]
 
