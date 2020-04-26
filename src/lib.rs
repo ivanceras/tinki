@@ -88,7 +88,7 @@ impl Component<Msg> for App {
                         self.raw = raw;
                         self.markdown_to_html();
                     }
-                    Err(e) => {
+                    Err(_e) => {
 						//TODO: deal with errors here
 						// 404 error, http request error
 						error!("display 404 here")
