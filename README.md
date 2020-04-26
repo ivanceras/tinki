@@ -8,8 +8,13 @@
 
 ## Features
 - client-side rendering
-- text base diagrams using svgbob
+- text base diagrams using [svgbob](https://ivanceras.github.io/svgbob-editor/)
 - table rendering of csv data
+- automatic handling of internal and external urls.
+- ~100 lines of code, thanks to the following libraries
+    - [sauron](https://github.com/ivanceras/sauron)
+    - [spongedown](https://github.com/ivanceras/spongedown)
+    - [svgbob](https://github.com/ivanceras/svgbob)
 
 
 [Demo](https://ivanceras.github.io/)
