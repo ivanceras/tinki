@@ -444,6 +444,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3728d817d99e5ac407411fa471ff9800a778d88a24685968b36824eaf4bee400"
 
 [[package]]
+name = "memory_units"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8452105ba047068f40ff7093dd1d9da90898e63dd61736462e9cdda6a90ad3c3"
+
+[[package]]
 name = "miniz_oxide"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -809,19 +815,6 @@ dependencies = [
 
 [[package]]
 name = "sauron"
-version = "0.23.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f035133bcd9ad11209961acf517ae13916853c5a16e96b14c9d3f2e932fc0521"
-dependencies = [
- "cfg-if",
- "lazy_static",
- "log",
- "sauron_vdom 0.23.0",
- "thiserror",
-]
-
-[[package]]
-name = "sauron"
 version = "0.24.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2ac3055fbee8a35ca88282102f4d58a50b2465d52689b6fe06ae387c2c1525b6"
@@ -830,19 +823,10 @@ dependencies = [
  "js-sys",
  "lazy_static",
  "log",
- "sauron_vdom 0.24.0",
+ "sauron_vdom",
  "thiserror",
  "wasm-bindgen",
  "web-sys",
-]
-
-[[package]]
-name = "sauron_vdom"
-version = "0.23.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "55a5b3da3f59e0117db9c2fd148f95faa87d25440b27edbd049d57e3368d3d9c"
-dependencies = [
- "log",
 ]
 
 [[package]]
@@ -917,9 +901,9 @@ checksum = "c7cb5678e1615754284ec264d9bb5b4c27d2018577fd90ac0ceb578591ed5ee4"
 
 [[package]]
 name = "spongedown"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "94d5555e492752db4242bddc4c5b760af0cc3836f60e7e9d68d4fbd05cfde87a"
+checksum = "190b92714d8df5bf4d242aa13bb4beeea7e97bf923d0872de806f36bf1e38f58"
 dependencies = [
  "comrak",
  "csv",
@@ -934,16 +918,16 @@ dependencies = [
 
 [[package]]
 name = "svgbob"
-version = "0.5.0-alpha.3"
+version = "0.5.0-alpha.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37d4a2ab6f326bdab03234d1fb0df0f16b818a20f58e45476905c1b365517626"
+checksum = "c3cf0d4d92431e4bba595b8c981958fe7130e27b0b1fcc4ba492e70cce2a50fa"
 dependencies = [
  "itertools",
  "lazy_static",
  "nalgebra",
  "ncollide2d",
  "pom",
- "sauron 0.23.0",
+ "sauron",
  "unicode-width",
 ]
 
@@ -1016,10 +1000,11 @@ dependencies = [
  "console_error_panic_hook",
  "console_log",
  "log",
- "sauron 0.24.0",
+ "sauron",
  "spongedown",
  "url_path",
  "wasm-bindgen",
+ "wee_alloc",
 ]
 
 [[package]]
@@ -1182,6 +1167,18 @@ checksum = "2d6f51648d8c56c366144378a33290049eafdd784071077f6fe37dae64c1c4cb"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
+]
+
+[[package]]
+name = "wee_alloc"
+version = "0.4.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dbb3b5a6b2bb17cb6ad44a2e68a43e8d2722c997da10e928665c72ec6c0a0b8e"
+dependencies = [
+ "cfg-if",
+ "libc",
+ "memory_units",
+ "winapi",
 ]
 
 [[package]]

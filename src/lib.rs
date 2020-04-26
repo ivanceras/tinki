@@ -4,6 +4,10 @@ use std::collections::BTreeMap;
 use url_path::UrlPath;
 use wasm_bindgen::prelude::*;
 
+// Use `wee_alloc` as the global allocator.
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+
 #[derive(Clone)]
 pub enum Msg {
     UrlChanged(String),
@@ -84,7 +88,11 @@ impl Component<Msg> for App {
                         self.raw = raw;
                         self.markdown_to_html();
                     }
-                    Err(e) => error!("display 404 here"),
+                    Err(e) => {
+						//TODO: deal with errors here
+						// 404 error, http request error
+						error!("display 404 here")
+					}
                 }
                 Cmd::none()
             }
