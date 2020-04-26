@@ -4,6 +4,9 @@ version = "0.1.0"
 authors = [ "Jovansonlee Cesar <ivanceras@gmail.com>" ]
 license = "MIT"
 edition = "2018"
+repository = "https://github.com/ivanceras/tinki"
+documentation = "https://docs.rs/tinki"
+keywords = ["markdown", "wiki", "svgbob"]
 
 [lib]
 crate-type = ["cdylib"]
