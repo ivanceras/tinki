@@ -1,7 +1,8 @@
 [package]
 name = "tinki"
 version = "0.1.0"
-authors = ["lee"]
+authors = [ "Jovansonlee Cesar <ivanceras@gmail.com>" ]
+license = "MIT"
 edition = "2018"
 
 [lib]
