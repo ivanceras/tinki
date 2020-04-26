@@ -1,7 +1,10 @@
+## Tinki wiki
 
-## ~~Due to syntect dependencies for highlighting~~
-Need to install these:
-```
-sudo apt install llvm libonig-dev libonig4
-```
-- This is now solve with using fancy-regex feature in syntect
+[WIP] Tinki is markdown base static wiki.
+
+## Features
+- text base diagrams using svgbob
+- table rendering of csv data
+
+
+[Demo](https://ivanceras.github.io/)

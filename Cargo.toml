@@ -8,11 +8,11 @@ edition = "2018"
 crate-type = ["cdylib"]
 
 [dependencies]
-sauron = { path = "../sauron", features = ["with-dom"] }
-url_path = { path = "../url_path" }
+sauron = { version = "0.24.0", features = ["with-dom"] }
+url_path = "0.1.3"
 log = "0.4"
 console_log = "0.1"
-spongedown = { path = "../spongedown" }
+spongedown = "0.4.0"
 wasm-bindgen = "0.2.60"
 console_error_panic_hook = "0.1"
 
